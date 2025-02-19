@@ -1,38 +1,53 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
-import catchAsync from '../utils/catchAsync';
-import AppError from '../errors/AppError';
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
-import { TUserAccessRole } from '../modules/user/user.interface';
+import AppError from '../errors/AppError';
+import catchAsync from '../utils/catchAsync';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { StatusCodes } from 'http-status-codes';
+import { UserRegister } from '../modules/auth/auth.model';
+import { TUserRole } from '../modules/auth/auth.interface';
 
-
-// Create Zod Validate Function
-const auth = (...requiredRole: TUserAccessRole[]) => {
+const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = req.headers.authorization;
+    // console.log('Required Roles:', requiredRoles);
 
-    // Check Token
+    // checking if the token is missing
     if (!token) {
-      throw new AppError(401, 'You are not Unauthorized!');
+      throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized!');
     }
 
-
-    // Validate token if available
-    jwt.verify(
+    // checking if the given token is valid
+    const decoded = jwt.verify(
       token,
       config.JWT_ACCESS_TOKEN as string,
-      function (err: any, decoded: any) {
-        if (err) {
-          throw new AppError(401, 'You are not Unauthorized!');
-        }
-        const role = (decoded as JwtPayload).role;
-        if (requiredRole && !requiredRole.includes(role)) {
-          throw new AppError(401, 'You are not Unauthorized!');
-        }
-        req.user = decoded as JwtPayload;
-        next();
-      },
-    );
+    ) as JwtPayload;
+
+    const { email } = decoded;
+    // console.log('Decoded Email:', email);
+
+    // checking if the user exists
+    const user = await UserRegister.isUserExistsEmail(email);
+    // console.log('User Exists Data:', user);
+
+    if (!user) {
+      throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found!');
+    }
+
+    // checking if the user is blocked
+    if (user?.isBlocked) {
+      throw new AppError(StatusCodes.FORBIDDEN, 'This user is dectivated !');
+    }
+
+    // checking roles
+    // if (requiredRoles.length && !requiredRoles.includes(role)) {
+    //   throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized!');
+    // }
+
+    req.user = decoded as JwtPayload;
+    next();
   });
 };
 

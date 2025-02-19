@@ -1,4 +1,4 @@
-import { TUserRole } from "./user.interface";
+import { TUserRole } from "./auth.interface";
 
 export const UserRole: TUserRole[] = ['admin' , 'user'];
 
