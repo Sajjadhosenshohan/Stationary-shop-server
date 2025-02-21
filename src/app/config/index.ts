@@ -9,6 +9,9 @@ export default {
   BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND,
   JWT_ACCESS_TOKEN: process.env.JWT_ACCESS_TOKEN,
   JWT_ACCESS_TOKEN_EXPIRES_IN: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
-  store_id: process.env.store_id,
-  store_pass: process.env.store_pass,
+  //payment
+  store_id: process.env.STORE_ID,
+  store_pass: process.env.STORE_PASS,
+
+
 };

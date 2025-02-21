@@ -12,6 +12,18 @@ const addProductData = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAProductData = catchAsync(async (req, res) => {
+  const {productId} = req.params;
+  console.log(productId)
+  const result = await productServices.getAProductDataFromDB(productId);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'product data retrieved successfully',
+    data: result,
+  });
+});
+
 const getAllProductData = catchAsync(async (req, res) => {
   const result = await productServices.getAllProductDataFromDB(req.query);
   sendResponse(res, {
@@ -48,4 +60,5 @@ export const productController = {
   getAllProductData,
   deleteProductData,
   updateProductData,
+  getAProductData
 };

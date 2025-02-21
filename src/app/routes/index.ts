@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { productRoutes } from '../modules/productManagement/product.route';
+import { ssl_commerzRoutes } from '../ssl_commerz/ssl_commerz';
 const router = Router();
 
 const moduleRoutes = [
@@ -11,6 +12,10 @@ const moduleRoutes = [
   {
     path: '/product',
     route: productRoutes,
+  },
+  {
+    path: '/order',
+    route: ssl_commerzRoutes,
   },
 ];
 

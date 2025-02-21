@@ -1,11 +1,14 @@
-import { model, Query, Schema } from 'mongoose';
+import mongoose, { model, Query, Schema } from 'mongoose';
 import { TProduct } from './product.interface';
 
 const ProductSchema = new Schema<TProduct>({
+  _id: {
+    type: mongoose.Schema.Types.ObjectId
+  },
   title: { type: String, required: true },
   numberOfBooks: { type: Number, required: true },
   description: { type: String, required: true },
-  price: { type: String, required: true },
+  price: { type: Number, required: true },
   category: { type: String, required: true },
   imageUrl: { type: String, required: true },
   authorName: { type: String, required: true },

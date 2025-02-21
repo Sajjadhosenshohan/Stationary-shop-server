@@ -1,10 +1,12 @@
+import { Types } from "mongoose";
+
 // Types
-interface Product {
-  _id: string; // MongoDB ObjectId as a string
+export type TOrderProduct = {
+  _id: Types.ObjectId; // MongoDB ObjectId as a string
   title: string;
-  numberOfBooks: number;
+  numberOfProduct: number;
   description: string;
-  price: string; // Price as a string (consider converting to number if necessary)
+  price: number; // Price as a string (consider converting to number if necessary)
   category: string;
   imageUrl: string;
   authorName: string;
@@ -13,7 +15,7 @@ interface Product {
   isDeleted: boolean;
   __v: number;
 }
-interface UserInfo {
+export type TUserInfo = {
   name: string;
   email: string;
   role: string; // e.g., 'user', 'admin', etc.
@@ -21,10 +23,11 @@ interface UserInfo {
   exp: number; // Expiry timestamp
 }
 
-export interface TOrder {
-  product: Product;
+export type TOrder = {
+  product: TOrderProduct[];
   paidStatus: boolean;
+  total_order_amount: number;
   transactionId: string;
   orderStatus?: string;
-  userInfo: UserInfo;
+  userInfo: TUserInfo;
 }

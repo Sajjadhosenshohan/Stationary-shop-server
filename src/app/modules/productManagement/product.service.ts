@@ -29,6 +29,10 @@ const getAllProductDataFromDB = async (query: Record<string, unknown>) => {
     result,
   };
 };
+const getAProductDataFromDB = async (productId: string) => {
+  const result = await Product.findById(productId);
+  return result;
+};
 
 
 const deletedProductIntoDB = async (id: string, productInfo: Partial<TProduct>) => {
@@ -44,5 +48,6 @@ export const productServices = {
   addProductDataIntoDB,
   getAllProductDataFromDB,
   deletedProductIntoDB,
-  updateProductIntoDB
+  updateProductIntoDB,
+  getAProductDataFromDB
 };

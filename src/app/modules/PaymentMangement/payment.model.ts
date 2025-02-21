@@ -1,8 +1,8 @@
 import mongoose, { model } from 'mongoose';
-import { TOrder } from './payment.interface';
+import { TOrder, TOrderProduct } from './payment.interface';
 
 // Product Schema
-const ProductSchema = new mongoose.Schema({
+const ProductSchema = new mongoose.Schema<TOrderProduct>({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -11,7 +11,7 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  numberOfBooks: {
+  numberOfProduct: {
     type: Number,
     required: true,
   },
