@@ -6,7 +6,7 @@ import auth from '../../middlewares/auth';
 const router = express.Router();
 
 router.post('/add-product', productController.addProductData);
-router.get('/', auth(USER_ACCESS_ROLE.admin), productController.getAllProductData);
+router.get('/',  productController.getAllProductData);
 router.put('/delete-product', productController.deleteProductData);
 router.put('/update-product', productController.updateProductData);
 // auth(USER_ROLE.superAdmin, USER_ROLE.admin),

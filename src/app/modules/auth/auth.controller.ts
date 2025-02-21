@@ -39,7 +39,7 @@ const getAllUser = catchAsync(async (req, res) => {
 });
 const DeactivateAccount = catchAsync(async (req, res) => {
   // console.log(req.body.id);
-  const result = await AuthServices.deactiveAccount(req.body.id);
+  const result = await AuthServices.deactivateAccount(req.body.id);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

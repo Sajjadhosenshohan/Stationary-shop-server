@@ -13,7 +13,7 @@ const addProductData = catchAsync(async (req, res) => {
   });
 });
 const getAllProductData = catchAsync(async (req, res) => {
-  const result = await productServices.getAllProductDataFromDB();
+  const result = await productServices.getAllProductDataFromDB(req.query);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -33,7 +33,7 @@ const deleteProductData = catchAsync(async (req, res) => {
   });
 });
 const updateProductData = catchAsync(async (req, res) => {
-  const result = await productServices.updateProductIntoDB(req.body.BookId,req.body.bookInfo);
+  const result = await productServices.updateProductIntoDB(req.body.productId,req.body.productInfo);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

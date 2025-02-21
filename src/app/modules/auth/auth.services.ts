@@ -67,7 +67,7 @@ const getAllUserFromDB = async () => {
   return result;
 };
 
-const deactiveAccount = async (id: string) => {
+const deactivateAccount = async (id: string) => {
   // console.log(id);
   const result = await UserRegister.findByIdAndUpdate(id, { isBlocked: true });
   return result;
@@ -91,7 +91,7 @@ export const AuthServices = {
   loginUser,
   registerUser,
   getAllUserFromDB,
-  deactiveAccount,
+  deactivateAccount,
   activeAccountIntoDB,
   changeRoleFromDB,
 };
