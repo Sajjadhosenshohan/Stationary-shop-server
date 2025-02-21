@@ -31,8 +31,9 @@ const getAllProductDataFromDB = async (query: Record<string, unknown>) => {
 };
 
 
-const deletedProductIntoDB = async (id: string) => {
-  const result = await Product.findByIdAndUpdate(id, { isDeleted: true });
+const deletedProductIntoDB = async (id: string, productInfo: Partial<TProduct>) => {
+  // Update product by setting isDeleted to true
+  const result = await Product.findByIdAndUpdate(id, { ...productInfo }, { new: true });
   return result;
 };
 const updateProductIntoDB = async (id: string, productInfo: Partial<TProduct>) => {

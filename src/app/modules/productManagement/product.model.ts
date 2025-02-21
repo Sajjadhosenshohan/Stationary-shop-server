@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Query, Schema } from 'mongoose';
 import { TProduct } from './product.interface';
 
 const ProductSchema = new Schema<TProduct>({
@@ -12,5 +12,11 @@ const ProductSchema = new Schema<TProduct>({
   authorEmail: { type: String, required: true },
   isAvailable: { type: Boolean, required: true },
   isDeleted: { type: Boolean, default: false },
+});
+
+// Query middleware to filter out products marked as deleted
+ProductSchema.pre<Query<TProduct, TProduct>>(/^find/, function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
 });
 export const Product = model<TProduct>('Product', ProductSchema);

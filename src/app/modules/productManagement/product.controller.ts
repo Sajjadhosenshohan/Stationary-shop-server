@@ -23,13 +23,14 @@ const getAllProductData = catchAsync(async (req, res) => {
 });
 
 const deleteProductData = catchAsync(async (req, res) => {
-  // console.log(req.body.id);
-  const result = await productServices.deletedProductIntoDB(req.body.id);
+  const { productId, productInfo } = req.body;
+  const result = await productServices.updateProductIntoDB(productId, productInfo);
+
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: 'Product data deleted successfully',
-    data: result,
+    data: null,
   });
 });
 const updateProductData = catchAsync(async (req, res) => {
