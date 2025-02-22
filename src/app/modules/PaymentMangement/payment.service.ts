@@ -1,60 +1,98 @@
+import { TProduct } from '../productManagement/product.interface';
 import { Product } from '../productManagement/product.model';
+import { TOrder, TOrderProduct } from './payment.interface';
 import { Order } from './payment.model';
 
+// const paymentSuccessfullIntoDB = async (transactionId: string) => {
+//   const result = await Order.findOneAndUpdate(
+//     { transactionId: transactionId },
+//     { paidStatus: true },
+//     {
+//       new: true,
+//     },
+//   );
+//   // console.log(result.product);
+//   const findBook = await Product.findById({ _id: result?.product?._id });
+//   // console.log('Find Book =>', findBook);
+//   if (findBook) {
+//     const updateBookCount = findBook?.numberOfBooks - 1;
+//     // console.log(updateBookCount);
+
+//     await Product.findByIdAndUpdate(
+//       { _id: findBook?._id },
+//       { numberOfBooks: updateBookCount },
+//     );
+//   }
+
+//   return result;
+// };
+
 const paymentSuccessfullIntoDB = async (transactionId: string) => {
+  // Find the order by the transactionId and update the paidStatus
   const result = await Order.findOneAndUpdate(
     { transactionId: transactionId },
     { paidStatus: true },
-    {
-      new: true,
-    },
-  );
-  // console.log(result.product);
-  const findBook = await Product.findById({ _id: result?.product?._id });
-  // console.log('Find Book =>', findBook);
-  if (findBook) {
-    const updateBookCount = findBook?.numberOfBooks - 1;
-    // console.log(updateBookCount);
+    { new: true }
+  ).populate('products'); // Populate products with full product details
 
-    await Product.findByIdAndUpdate(
-      { _id: findBook?._id },
-      { numberOfBooks: updateBookCount },
-    );
+  if (result?.products) {
+    // Loop through each product in the order
+    for (const product of result.products) {
+      const findProduct = await Product.findById(product._id);
+      if (findProduct && findProduct.numberOfProduct > 0) {
+        // Update the stock count of the product
+        const updatedBookCount = findProduct.numberOfProduct - 1;
+        await Product.findByIdAndUpdate(
+          { _id: findProduct._id },
+          { numberOfBooks: updatedBookCount }
+        );
+      } else {
+        console.log(`Product with ID: ${product._id} not found or out of stock`);
+      }
+    }
   }
 
   return result;
 };
 
+
 const getAdminOrderDataFromDB = async (email: string) => {
-  // console.log(email);
-  const result = await Order.find({
-    paidStatus: true,
-    'product.authorEmail': email,
-  });
-  return result;
+  // Step 1: Find all orders that are paid and contain products
+  const orders = await Order.find({ paidStatus: true }).populate("products");
+
+  // Step 2: Filter products by authorEmail
+  const filteredOrders = [];
+
+  for (const order of orders) {
+    // Order থেকে product collection-এর ObjectId নিয়ে আসা
+    const productIds = order.products.map((product: any) => product._id);
+
+    // Product collection থেকে matching product খোঁজা
+    const matchingProducts = await Product.find({
+      _id: { $in: productIds },
+      authorEmail: email, // Match author email
+    });
+
+    if (matchingProducts.length > 0) {
+      // Order-এর মধ্যে থাকা শুধুমাত্র matching products রাখবো
+      order.products = matchingProducts;
+      filteredOrders.push(order);
+    }
+  }
+  return filteredOrders;
 };
 const getUserOrderDataFromDB = async (email: string) => {
-  // console.log(email);
   const result = await Order.find({
     paidStatus: true,
     'userInfo.email': email,
+  }).populate({
+    path: 'products',
   });
-  return result;
+return result 
 };
-const acceptOrderIntoDB = async (id: string) => {
-  // console.log(email);
-  // console.log(id);
-
+const changeOrderStatusIntoDB = async (id:string,orderStatus:string) => {
   const result = await Order.findByIdAndUpdate(id, {
-    orderStatus: 'accepted',
-  });
-  return result;
-};
-const cencelOrderIntoDB = async (id: string) => {
-  // console.log(email);
-  // console.log(id);
-  const result = await Order.findByIdAndUpdate(id, {
-    orderStatus: 'cenceled',
+    orderStatus: orderStatus,
   });
   return result;
 };
@@ -68,7 +106,6 @@ export const paymentService = {
   paymentSuccessfullIntoDB,
   getAdminOrderDataFromDB,
   getUserOrderDataFromDB,
-  acceptOrderIntoDB,
-  cencelOrderIntoDB,
+  changeOrderStatusIntoDB,
   deleteOrderFromDB,
 };

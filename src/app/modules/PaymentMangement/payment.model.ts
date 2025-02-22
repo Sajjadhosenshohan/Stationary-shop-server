@@ -1,61 +1,9 @@
 import mongoose, { model } from 'mongoose';
-import { TOrder, TOrderProduct } from './payment.interface';
+import { TOrder, TUserInfo } from './payment.interface';
+import { boolean } from 'zod';
 
-// Product Schema
-const ProductSchema = new mongoose.Schema<TOrderProduct>({
-  _id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  numberOfProduct: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  imageUrl: {
-    type: String,
-    required: true,
-  },
-  authorName: {
-    type: String,
-    required: true,
-  },
-  authorEmail: {
-    type: String,
-    required: true,
-  },
-  isAvailable: {
-    type: Boolean,
-    required: true,
-    default: true,
-  },
-  isDeleted: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
-  __v: {
-    type: Number,
-    select: false,
-  },
-});
 // UserInfo Schema
-const UserInfoSchema = new mongoose.Schema({
+const UserInfoSchema = new mongoose.Schema<TUserInfo>({
   name: {
     type: String,
     required: true,
@@ -67,7 +15,7 @@ const UserInfoSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ['user', 'admin'], // Add roles as needed
+    enum: ['user', 'admin'],
   },
   iat: {
     type: Number,
@@ -80,20 +28,36 @@ const UserInfoSchema = new mongoose.Schema({
 });
 
 // Order Schema
-const OrderSchema = new mongoose.Schema({
-  product: {
-    type: ProductSchema,
-    required: true,
-  },
+const OrderSchema = new mongoose.Schema<TOrder>({
+  products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product', // Reference the Product model
+      required: true,
+    },
+  ],
   paidStatus: {
     type: Boolean,
     required: true,
   },
+  total_order_amount: {
+    type: Number,
+    required: true,
+  },
+
   transactionId: {
     type: String,
     required: true,
   },
-  orderStatus: { type: String, default: 'pending' },
+  isDeleted: {
+    type: Boolean,
+    default: true,
+  },
+  orderStatus: {
+    type: String,
+    enum: ['pending', 'accepted', 'shipping', 'canceled', 'delivered'],
+    default: 'pending',
+  },
   userInfo: {
     type: UserInfoSchema,
     required: true,

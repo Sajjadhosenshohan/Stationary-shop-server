@@ -4,19 +4,20 @@ import SSLCommerzPayment from 'sslcommerz-lts';
 import mongoose from 'mongoose';
 import { TOrder } from '../modules/PaymentMangement/payment.interface';
 import { Product } from '../modules/productManagement/product.model';
+import { Order } from '../modules/PaymentMangement/payment.model';
 const router = express.Router();
 const port = config.PORT;
 
-const store_id = config.store_id;
-const store_passwd = config.store_pass;
+const store_id = config.store_id as string;
+const store_passwd = config.store_pass as string;
 const is_live = false; //true for live, false for sandbox
 
 const tran_id = new mongoose.Types.ObjectId().toString();
 
 router.post('/', async (req, res) => {
     const orderInfo = req.body as TOrder;
-    const productIds = orderInfo?.product?.map((product) => product?._id);
-  
+    const productIds = orderInfo?.products?.map((product) => product?._id);
+  console.log(productIds,)
     // Fetch the products based on the product IDs
     const products = await Product.find({ _id: { $in: productIds } });
   
@@ -24,15 +25,15 @@ router.post('/', async (req, res) => {
     const productNames = products?.map((product) => product.title).join(', ');  // Joins all product names as a comma-separated string
     const productCategories = products?.map((product) => product.category).join(', ');  // Joins all categories as a comma-separated string
   
-    const userInfo = orderInfo.userInfo;
+    const userInfo = orderInfo?.userInfo;
   
     const data = {
-      total_amount: orderInfo.total_order_amount,
+      total_amount: orderInfo?.total_order_amount,
       currency: 'BDT',
       tran_id: tran_id, // use unique tran_id for each api call
-      success_url: `http://localhost:5000/payment/success/${tran_id}`,
-      fail_url: `http://localhost:5000/payment/failed/${tran_id}`,
-      cancel_url: 'http://localhost:5000/cancel',
+      success_url: `http://localhost:5000/api/v1/payment/success/${tran_id}`,
+      fail_url: `http://localhost:5000/api/v1/payment/failed/${tran_id}`,
+      cancel_url: 'http://localhost:5000/api/v1/payment/cancel',
       ipn_url: 'http://localhost:5000/ipn',
       shipping_method: 'Courier',
       product_name: productNames,  // Set the joined product names
@@ -58,29 +59,25 @@ router.post('/', async (req, res) => {
     };
 
     console.log(data)
-//   const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
+  const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live);
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // const apiResponse: any = await sslcz.init(data); // Use await here
-    // // Redirect the user to payment gateway
-    // const GatewayPageURL = apiResponse.GatewayPageURL;
-    // res.send({ url: GatewayPageURL });
+    const apiResponse: any = await sslcz.init(data);
+    // Redirect the user to payment gateway
+    const GatewayPageURL = apiResponse.GatewayPageURL;
+    res.send({ url: GatewayPageURL });
 
-    // const finalOrder = {
-    //   product,
-    //   paidStatus: false,
-    //   transactionId: tran_id,
-    //   userInfo,
-    // };
-    // // console.log('Final Order : ', finalOrder);
-    // await Order.create(finalOrder); // Use await here
-    // console.log('Order Saved: ', result);
-
-    // console.log('Redirecting to: ', GatewayPageURL);
-    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    const finalOrder = {
+      products: productIds,
+      paidStatus: false,
+      transactionId: tran_id,
+      userInfo,
+      total_order_amount : orderInfo?.total_order_amount,
+        orderStatus: "pending",
+    };
+    const result = await Order.create(finalOrder);
   } catch (error) {
-    // console.error('Error occurred:', error);
+    console.log(error)
     res.status(500).send({ error: 'Something went wrong' });
   }
 });

@@ -1,33 +1,37 @@
 import { Types } from "mongoose";
 
-// Types
+// Types for Order Products
 export type TOrderProduct = {
-  _id: Types.ObjectId; // MongoDB ObjectId as a string
+  _id: Types.ObjectId; // MongoDB ObjectId type
   title: string;
-  numberOfProduct: number;
+  numberOfProduct: number; // Assuming this represents the quantity of the product ordered
   description: string;
-  price: number; // Price as a string (consider converting to number if necessary)
+  price: number; // Price should be a number, not a string
   category: string;
   imageUrl: string;
   authorName: string;
   authorEmail: string;
   isAvailable: boolean;
   isDeleted: boolean;
-  __v: number;
-}
+  __v?: number; // Optional since it might not always be needed
+};
+
+// Types for User Info
 export type TUserInfo = {
   name: string;
   email: string;
-  role: string; // e.g., 'user', 'admin', etc.
+  role: "user" | "admin"; // Using a union type for predefined roles
   iat: number; // Issued at (timestamp)
   exp: number; // Expiry timestamp
-}
+};
 
+// Types for Order
 export type TOrder = {
-  product: TOrderProduct[];
+  products: TOrderProduct[] | Types.ObjectId[]; // Array of product ObjectId references
   paidStatus: boolean;
-  total_order_amount: number;
+  total_order_amount: number; // Total order amount as a number
   transactionId: string;
-  orderStatus?: string;
+  orderStatus?: "pending"| "accepted"| "shipping" | "canceled" | "delivered"; // Optional status, default to 'pending' in the schema
   userInfo: TUserInfo;
-}
+  isDeleted: boolean
+};

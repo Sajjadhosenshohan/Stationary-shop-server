@@ -8,10 +8,10 @@ const paymentSuccess = catchAsync(async (req, res) => {
   // console.log('Transaction ID:', tranId);
   await paymentService.paymentSuccessfullIntoDB(tranId);
 
-  res.redirect(`https://bookbazzar-online-ph-a4.vercel.app/payment-successful/${req.params.tranId}`);
+  res.redirect(`http://localhost:5174/payment-successful/${req.params.tranId}`);
 });
 const paymentFailed = catchAsync(async (req, res) => {
-  res.redirect(`https://bookbazzar-online-ph-a4.vercel.app/payment-failed/${req.params.tranId}`);
+  res.redirect(`http://localhost:5174/payment-failed/${req.params.tranId}`);
 });
 
 const getAdminOrderData = catchAsync(async (req, res) => {
@@ -30,25 +30,14 @@ const getUserOrderData = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Order Data retrived successfully',
+    message: 'Order Data retrieved successfully',
     data: result,
   });
 });
-
-const acceptOrder = catchAsync(async (req, res) => {
-  // console.log(req.body.id);
+const changeOrderStatus = catchAsync(async (req, res) => {
+  const {id,orderStatus} = req.body
   // console.log(req.body);
-  const result = await paymentService.acceptOrderIntoDB(req.body.id);
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: 'Order accepted successfully',
-    data: result,
-  });
-});
-const cencelOrder = catchAsync(async (req, res) => {
-  // console.log(req.body);
-  const result = await paymentService.cencelOrderIntoDB(req.body.id);
+  const result = await paymentService.changeOrderStatusIntoDB(id,orderStatus);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -72,7 +61,6 @@ export const paymentController = {
   paymentFailed,
   getAdminOrderData,
   getUserOrderData,
-  acceptOrder,
-  cencelOrder,
+  changeOrderStatus,
   DeleteOrder
 };

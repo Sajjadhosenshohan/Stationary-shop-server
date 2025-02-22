@@ -1,12 +1,12 @@
 import mongoose, { model, Query, Schema } from 'mongoose';
-import { TProduct } from './product.interface';
+import { TOrderProduct } from '../PaymentMangement/payment.interface';
 
-const ProductSchema = new Schema<TProduct>({
+const ProductSchema = new Schema<TOrderProduct>({
   _id: {
     type: mongoose.Schema.Types.ObjectId
   },
   title: { type: String, required: true },
-  numberOfBooks: { type: Number, required: true },
+  numberOfProduct: { type: Number, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
   category: { type: String, required: true },
@@ -18,8 +18,8 @@ const ProductSchema = new Schema<TProduct>({
 });
 
 // Query middleware to filter out products marked as deleted
-ProductSchema.pre<Query<TProduct, TProduct>>(/^find/, function (next) {
+ProductSchema.pre<Query<TOrderProduct, TOrderProduct>>(/^find/, function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
-export const Product = model<TProduct>('Product', ProductSchema);
+export const Product = model<TOrderProduct>('Product', ProductSchema);
