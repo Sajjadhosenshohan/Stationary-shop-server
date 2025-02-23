@@ -67,6 +67,20 @@ const getAllUserFromDB = async () => {
   return result;
 };
 
+const getSingleUserFromDB = async (email:string) => {
+  const result = await UserRegister.findOne({email});
+  return result;
+};
+const updateUserInfoFromDB = async (email, data) => {
+  console.log(data)
+  const result = await UserRegister.findOneAndUpdate(
+    { email },
+    { $set: data }, // Use $set to update only specific fields
+    { new: true } // Return the updated document
+  );
+  return result;
+};
+
 const deactivateAccount = async (id: string) => {
   // console.log(id);
   const result = await UserRegister.findByIdAndUpdate(id, { isBlocked: true });
@@ -94,4 +108,6 @@ export const AuthServices = {
   deactivateAccount,
   activeAccountIntoDB,
   changeRoleFromDB,
+  getSingleUserFromDB,
+  updateUserInfoFromDB
 };

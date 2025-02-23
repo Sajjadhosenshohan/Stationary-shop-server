@@ -12,6 +12,9 @@ const userRegisterSchema = new Schema<TRegisterUser>(
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
     isBlocked: { type: Boolean, default: false },
     imageUrl: { type: String, required: true },
+    city: { type: String,  },
+    presentAddress: { type: String,  },
+    phone: { type: String,  },
   },
   {
     timestamps: true,

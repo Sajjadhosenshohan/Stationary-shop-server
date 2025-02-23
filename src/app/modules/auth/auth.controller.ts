@@ -37,6 +37,27 @@ const getAllUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleUser = catchAsync(async (req, res) => {
+  const email = req.params.email;
+
+  const result = await AuthServices.getSingleUserFromDB(email);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'User information retrieved successfully',
+    data: result,
+  });
+});
+const updateUser = catchAsync(async (req, res) => {
+  const {email,...data} = req.body;
+  const result = await AuthServices.updateUserInfoFromDB(email,data);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Profile updated successfully',
+    data: result,
+  });
+});
 const DeactivateAccount = catchAsync(async (req, res) => {
   // console.log(req.body.id);
   const result = await AuthServices.deactivateAccount(req.body.id);
@@ -77,4 +98,6 @@ export const AuthController = {
   DeactivateAccount,
   ActivateAccount,
   ChangeRole,
+  getSingleUser,
+  updateUser
 };

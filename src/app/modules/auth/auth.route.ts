@@ -16,6 +16,9 @@ router.post(
   AuthController.createRegisterUser,
 );
 
+router.get('/get-single-user/:email', AuthController.getSingleUser);
+router.put('/update-profile-data', AuthController.updateUser);
+
 router.post('/admin/block-user', AuthController.DeactivateAccount);
 router.post('/admin/make-active-user', AuthController.ActivateAccount);
 

@@ -8,7 +8,6 @@ export type TLoginUser = {
   password: string;
 };
 
-
 export type TRegisterUser = {
   name: string;
   email: string;
@@ -16,6 +15,9 @@ export type TRegisterUser = {
   role: 'admin' | 'user';
   imageUrl: string;
   isBlocked?: boolean;
+  city?: string;
+  presentAddress?: string;
+  phone?: string;
 };
 export interface UserModel extends Model<TRegisterUser> {
   isUserExistsEmail(email: string): Promise<TRegisterUser>;

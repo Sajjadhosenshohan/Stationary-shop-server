@@ -11,17 +11,14 @@ const app: Application = express();
 
 // Middleware
 app.use(express.json());
+app.use(express.text());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: [
-      'https://bookbazzar-online-ph-a4.vercel.app',
-      'http://localhost:5173',
-      'http://localhost:5174',
-    ],
-    credentials: true,
-  }),
-);
+app.use(cors({
+  origin: "http://localhost:5174", // Allow frontend URL
+  credentials: true, // Allow cookies and authorization headers
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "Content-Type, Authorization"
+}));
 app.use(bodyParser.json());
 
 // app.use('/order', orderRoutes);
