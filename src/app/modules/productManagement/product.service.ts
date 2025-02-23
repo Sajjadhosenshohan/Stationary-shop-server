@@ -1,34 +1,35 @@
 import QueryBuilder from '../../builder/QueryBuilder';
+import { TOrderProduct } from '../PaymentMangement/payment.interface';
 import { TProduct } from './product.interface';
 import { Product } from './product.model';
 
-const addProductDataIntoDB = async (payload: TProduct) => {
+const addProductDataIntoDB = async (payload: TOrderProduct) => {
+  console.log(payload)
   const result = await Product.create(payload);
+  console.log(result)
   return result;
 };
 
 const getAllProductDataFromDB = async (query: Record<string, unknown>) => {
-  // const result = await Product.find({ isDeleted: false });
-  // return result;
-
   const courseQuery = new QueryBuilder(
-    Product.find(),
-    query,
+    Product.find({ isDeleted: false }), // <-- এখানে isDeleted ফিল্টার যোগ করা হলো
+    query
   )
-    .search(["title", "author", "category"])
+    .search(["title", "authorName", "category"])
     .filter()
     .sort()
     .paginate()
     .fields();
 
+  const meta = await courseQuery.countTotal(); // <-- countTotal() আগে কল করা হচ্ছে
   const result = await courseQuery.modelQuery;
-  const meta = await courseQuery.countTotal();
 
   return {
     meta,
     result,
   };
 };
+
 const getAProductDataFromDB = async (productId: string) => {
   const result = await Product.findById(productId);
   return result;

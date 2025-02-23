@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.text());
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5174", // Allow frontend URL
+  origin: ["http://localhost:5174","http://localhost:5173"], // Allow frontend URL
   credentials: true, // Allow cookies and authorization headers
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Content-Type, Authorization"

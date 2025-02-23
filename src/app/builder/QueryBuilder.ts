@@ -24,17 +24,29 @@ class QueryBuilder<T> {
 
     return this;
   }
-
   filter() {
-    const queryObj = { ...this.query }; // copy
-
-    // Filtering
+    const queryObj = { ...this.query };
     const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
 
     excludeFields.forEach((el) => delete queryObj[el]);
 
-    this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
+    // Price Range Filter Handling
+    if (queryObj.minPrice || queryObj.maxPrice) {
+      const priceFilter: Record<string, number> = {};
 
+      if (queryObj.minPrice) {
+        priceFilter.$gte = Number(queryObj.minPrice);
+      }
+      if (queryObj.maxPrice) {
+        priceFilter.$lte = Number(queryObj.maxPrice);
+      }
+
+      queryObj.price = priceFilter;
+      delete queryObj.minPrice;
+      delete queryObj.maxPrice;
+    }
+
+    this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
     return this;
   }
 

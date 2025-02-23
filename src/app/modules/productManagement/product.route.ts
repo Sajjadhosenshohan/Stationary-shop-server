@@ -1,7 +1,5 @@
 import express from 'express';
 import { productController } from './product.controller';
-import { USER_ACCESS_ROLE } from '../auth/auth.constant';
-import auth from '../../middlewares/auth';
 
 const router = express.Router();
 

@@ -13,6 +13,7 @@ export type TOrderProduct = {
   authorEmail: string;
   isAvailable: boolean;
   isDeleted: boolean;
+  availability: "in-stock"|"out-of-stock";
   __v?: number; // Optional since it might not always be needed
 };
 
