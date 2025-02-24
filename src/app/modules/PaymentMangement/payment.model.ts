@@ -62,6 +62,8 @@ const OrderSchema = new mongoose.Schema<TOrder>({
     type: UserInfoSchema,
     required: true,
   },
+},{
+  timestamps: true
 });
 
 export const Order = model<TOrder>('Order', OrderSchema);

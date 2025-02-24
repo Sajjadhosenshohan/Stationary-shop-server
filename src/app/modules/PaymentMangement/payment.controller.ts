@@ -8,10 +8,10 @@ const paymentSuccess = catchAsync(async (req, res) => {
   // console.log('Transaction ID:', tranId);
   await paymentService.paymentSuccessfullIntoDB(tranId);
 
-  res.redirect(`http://localhost:5174/payment-successful/${req.params.tranId}`);
+  res.redirect(`http://localhost:5173/payment-successful/${req.params.tranId}`);
 });
 const paymentFailed = catchAsync(async (req, res) => {
-  res.redirect(`http://localhost:5174/payment-failed/${req.params.tranId}`);
+  res.redirect(`http://localhost:5173/payment-failed/${req.params.tranId}`);
 });
 
 const getAdminOrderData = catchAsync(async (req, res) => {

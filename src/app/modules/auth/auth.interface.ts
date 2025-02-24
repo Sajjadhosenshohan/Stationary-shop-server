@@ -14,7 +14,7 @@ export type TRegisterUser = {
   password: string;
   role: 'admin' | 'user';
   imageUrl: string;
-  isBlocked?: boolean;
+  isBlocked: boolean;
   city?: string;
   presentAddress?: string;
   phone?: string;

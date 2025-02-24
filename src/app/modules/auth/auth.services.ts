@@ -1,15 +1,12 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 import { TLoginUser, TRegisterUser } from './auth.interface';
-import AppError from '../../errors/AppError';
 import { StatusCodes } from 'http-status-codes';
 import { createToken, loginUserEmail } from './auth.utils';
 import { UserRegister } from './auth.model';
+import AppError from '../../errors/AppError';
 
 const loginUser = async (payload: TLoginUser) => {
-  // checking if the user is exist
-  // const user = await UserRegister.isUserExistsEmail(payload.email);
-
   const user = await UserRegister.isUserExistsEmail(payload?.email);
   // console.log("user",user);
 
@@ -28,7 +25,7 @@ const loginUser = async (payload: TLoginUser) => {
   if (
     !(await UserRegister.isPasswordMatched(payload?.password, user?.password))
   )
-    throw new AppError(StatusCodes.FORBIDDEN, 'Password do not matched');
+    throw new AppError(StatusCodes.FORBIDDEN, 'Password does not matched');
 
   //create token and sent to the  client
   const jwtPayload = {
@@ -58,9 +55,42 @@ const loginUser = async (payload: TLoginUser) => {
 };
 
 const registerUser = async (payload: TRegisterUser) => {
-  const result = await UserRegister.create(payload);
-  return result;
+  
+    // Step 1: Check if user already exists
+    const prevUser = await UserRegister.isUserExistsEmail(payload?.email);
+    console.log(prevUser)
+    if (prevUser) {
+      throw new AppError(409, "This user already exists!");
+    }
+
+    // Step 2: Create the user
+    const user = await UserRegister.create(payload);
+    if (!user) {
+      throw new AppError(500, "User registration failed!");
+    }
+
+    // Step 3: Create JWT payload
+    const jwtPayload = {
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      imageUrl: user.imageUrl,
+    };
+
+    // Step 4: Generate Access Token
+    const accessToken = createToken(
+      jwtPayload,
+      config.JWT_ACCESS_TOKEN as string,
+      config.JWT_ACCESS_TOKEN_EXPIRES_IN as string
+    );
+
+    return {
+      accessToken,
+      userInfo: user,
+    }
 };
+
+export default registerUser;
 
 const getAllUserFromDB = async () => {
   const result = await UserRegister.find();
