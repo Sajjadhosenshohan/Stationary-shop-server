@@ -101,7 +101,7 @@ const getSingleUserFromDB = async (email:string) => {
   const result = await UserRegister.findOne({email});
   return result;
 };
-const updateUserInfoFromDB = async (email, data) => {
+const updateUserInfoFromDB = async (email:string, data:TRegisterUser) => {
   const result = await UserRegister.findOneAndUpdate(
     { email },
     { $set: data }, // Use $set to update only specific fields

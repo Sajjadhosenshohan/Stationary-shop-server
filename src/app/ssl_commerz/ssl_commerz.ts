@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { TOrder } from '../modules/PaymentMangement/payment.interface';
 import { Product } from '../modules/productManagement/product.model';
 import { Order } from '../modules/PaymentMangement/payment.model';
+import { TPaymentData } from './ssl_commerz.types';
 const router = express.Router();
 const port = config.PORT;
 
@@ -27,8 +28,8 @@ router.post('/', async (req, res) => {
   
     const userInfo = orderInfo?.userInfo;
   
-    const data = {
-      total_amount: orderInfo?.total_order_amount,
+    const data:TPaymentData = {
+      total_amount: String(orderInfo?.total_order_amount),
       currency: 'BDT',
       tran_id: tran_id, // use unique tran_id for each api call
       success_url: `http://localhost:5000/api/v1/payment/success/${tran_id}`,

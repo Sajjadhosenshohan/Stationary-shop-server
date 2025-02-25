@@ -12,8 +12,6 @@ import { TUserRole } from '../modules/auth/auth.interface';
 const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
-    // console.log('Required Roles:', requiredRoles);
-
     // checking if the token is missing
     if (!token) {
       throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized!');

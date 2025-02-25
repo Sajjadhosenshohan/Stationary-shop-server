@@ -13,19 +13,22 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.text());
 app.use(cookieParser());
-app.use(cors({
-  origin: ["http://localhost:5174","http://localhost:5173"], // Allow frontend URL
-  credentials: true, // Allow cookies and authorization headers
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: "Content-Type, Authorization"
-}));
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5174',
+      'http://localhost:5173',
+      'https://stationary-shop-client.vercel.app',
+    ],
+    credentials: true, // Allow cookies and authorization headers
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+  }),
+);
 app.use(bodyParser.json());
 
-// app.use('/order', orderRoutes);
-
-// Test route
 const test = async (req: Request, res: Response) => {
-  res.send('BookBazaar server is running...');
+  res.send('Stationary server is running...');
 };
 
 app.get('/', test);
