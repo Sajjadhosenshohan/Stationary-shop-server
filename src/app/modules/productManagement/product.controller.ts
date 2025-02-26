@@ -36,7 +36,7 @@ const getAllProductData = catchAsync(async (req, res) => {
 
 const deleteProductData = catchAsync(async (req, res) => {
   const { productId, productInfo } = req.body;
-  const result = await productServices.updateProductIntoDB(productId, productInfo);
+  await productServices.updateProductIntoDB(productId, productInfo);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

@@ -8,10 +8,10 @@ const paymentSuccess = catchAsync(async (req, res) => {
   // console.log('Transaction ID:', tranId);
   await paymentService.paymentSuccessfullIntoDB(tranId);
 
-  res.redirect(`http://localhost:5173/payment-successful/${req.params.tranId}`);
+  res.redirect(`${process.env.CLIENT_BASE_URL}/payment-successful/${req.params.tranId}`);
 });
 const paymentFailed = catchAsync(async (req, res) => {
-  res.redirect(`http://localhost:5173/payment-failed/${req.params.tranId}`);
+  res.redirect(`${process.env.CLIENT_BASE_URL}/payment-failed/${req.params.tranId}`);
 });
 
 const getAdminOrderData = catchAsync(async (req, res) => {
@@ -20,7 +20,7 @@ const getAdminOrderData = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Order Data retrived successfully',
+    message: 'Order Data retrieved successfully',
     data: result,
   });
 });
@@ -41,7 +41,7 @@ const changeOrderStatus = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'Order cenceled successfully',
+    message: 'Order canceled successfully',
     data: result,
   });
 });

@@ -12,7 +12,7 @@ const addProductDataIntoDB = async (payload: TOrderProduct) => {
 
 const getAllProductDataFromDB = async (query: Record<string, unknown>) => {
   const courseQuery = new QueryBuilder(
-    Product.find({ isDeleted: false }), // <-- এখানে isDeleted ফিল্টার যোগ করা হলো
+    Product.find({ isDeleted: false }),
     query
   )
     .search(["title", "authorName", "category"])
@@ -21,7 +21,7 @@ const getAllProductDataFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .fields();
 
-  const meta = await courseQuery.countTotal(); // <-- countTotal() আগে কল করা হচ্ছে
+  const meta = await courseQuery.countTotal(); 
   const result = await courseQuery.modelQuery;
 
   return {

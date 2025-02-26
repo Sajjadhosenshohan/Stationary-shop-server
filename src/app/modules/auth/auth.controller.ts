@@ -33,7 +33,7 @@ const getAllUser = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: 'User infomation retrived successfully',
+    message: 'User information retrieved successfully',
     data: result,
   });
 });
@@ -79,8 +79,6 @@ const ActivateAccount = catchAsync(async (req, res) => {
   });
 });
 const ChangeRole = catchAsync(async (req, res) => {
-  // console.log(req.body);
-  // console.log(req.body.id);
 
   const result = await AuthServices.changeRoleFromDB(req.body);
   sendResponse(res, {

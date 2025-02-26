@@ -32,10 +32,10 @@ router.post('/', async (req, res) => {
       total_amount: String(orderInfo?.total_order_amount),
       currency: 'BDT',
       tran_id: tran_id, // use unique tran_id for each api call
-      success_url: `http://localhost:5000/api/v1/payment/success/${tran_id}`,
-      fail_url: `http://localhost:5000/api/v1/payment/failed/${tran_id}`,
-      cancel_url: 'http://localhost:5000/api/v1/payment/cancel',
-      ipn_url: 'http://localhost:5000/ipn',
+      success_url: `${process.env.SERVER_BASE_URL}/api/v1/payment/success/${tran_id}`,
+      fail_url: `${process.env.SERVER_BASE_URL}/api/v1/payment/failed/${tran_id}`,
+      cancel_url: `${process.env.SERVER_BASE_URL}/api/v1/payment/cancel`,
+      ipn_url: `${process.env.SERVER_BASE_URL}/ipn`,
       shipping_method: 'Courier',
       product_name: productNames,  // Set the joined product names
       product_category: productCategories,  // Set the joined product categories

@@ -3,32 +3,8 @@ import { Product } from '../productManagement/product.model';
 import { TOrder, TOrderProduct } from './payment.interface';
 import { Order } from './payment.model';
 
-// const paymentSuccessfullIntoDB = async (transactionId: string) => {
-//   const result = await Order.findOneAndUpdate(
-//     { transactionId: transactionId },
-//     { paidStatus: true },
-//     {
-//       new: true,
-//     },
-//   );
-//   // console.log(result.product);
-//   const findBook = await Product.findById({ _id: result?.product?._id });
-//   // console.log('Find Book =>', findBook);
-//   if (findBook) {
-//     const updateBookCount = findBook?.numberOfBooks - 1;
-//     // console.log(updateBookCount);
-
-//     await Product.findByIdAndUpdate(
-//       { _id: findBook?._id },
-//       { numberOfBooks: updateBookCount },
-//     );
-//   }
-
-//   return result;
-// };
 
 const paymentSuccessfullIntoDB = async (transactionId: string) => {
-  // Find the order by the transactionId and update the paidStatus
   const result = await Order.findOneAndUpdate(
     { transactionId: transactionId },
     { paidStatus: true },
@@ -97,8 +73,6 @@ const changeOrderStatusIntoDB = async (id:string,orderStatus:string) => {
   return result;
 };
 const deleteOrderFromDB = async (id: string) => {
-  // console.log(email);
-  // console.log(id);
   const result = await Order.findByIdAndDelete(id);
   return result;
 };

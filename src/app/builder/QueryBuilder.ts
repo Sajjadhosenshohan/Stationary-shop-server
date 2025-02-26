@@ -29,7 +29,11 @@ class QueryBuilder<T> {
     const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
 
     excludeFields.forEach((el) => delete queryObj[el]);
-
+    // filter by category all options handling
+    console.log(queryObj,33);
+    if (queryObj.category === "all") {
+      delete queryObj.category; 
+    }
     // Price Range Filter Handling
     if (queryObj.minPrice || queryObj.maxPrice) {
       const priceFilter: Record<string, number> = {};

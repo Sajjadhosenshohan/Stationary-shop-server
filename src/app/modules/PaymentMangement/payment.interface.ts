@@ -28,7 +28,7 @@ export type TUserInfo = {
 
 // Types for Order
 export type TOrder = {
-  products: TOrderProduct[] | Types.ObjectId[]; // Array of product ObjectId references
+  products: TOrderProduct[] | Types.ObjectId[];
   paidStatus: boolean;
   total_order_amount: number; // Total order amount as a number
   transactionId: string;

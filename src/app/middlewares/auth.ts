@@ -28,7 +28,6 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     // checking if the user exists
     const user = await UserRegister.isUserExistsEmail(email);
-    // console.log('User Exists Data:', user);
 
     if (!user) {
       throw new AppError(StatusCodes.NOT_FOUND, 'This user is not found!');
@@ -36,13 +35,8 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     // checking if the user is blocked
     if (user?.isBlocked) {
-      throw new AppError(StatusCodes.FORBIDDEN, 'This user is dectivated !');
+      throw new AppError(StatusCodes.FORBIDDEN, 'This user is deactivated !');
     }
-
-    // checking roles
-    // if (requiredRoles.length && !requiredRoles.includes(role)) {
-    //   throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized!');
-    // }
 
     req.user = decoded as JwtPayload;
     next();

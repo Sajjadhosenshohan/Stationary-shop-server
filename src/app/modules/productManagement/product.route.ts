@@ -10,6 +10,5 @@ router.get('/',  productController.getAllProductData);
 router.get('/:productId',  productController.getAProductData);
 router.put('/delete-product',auth(USER_ACCESS_ROLE.admin,USER_ACCESS_ROLE.user), productController.deleteProductData);
 router.put('/update-product',auth(USER_ACCESS_ROLE.admin,USER_ACCESS_ROLE.user), productController.updateProductData);
-// auth(USER_ROLE.superAdmin, USER_ROLE.admin),
 
 export const productRoutes = router;
