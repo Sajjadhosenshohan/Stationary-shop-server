@@ -15,8 +15,7 @@ const paymentFailed = catchAsync(async (req, res) => {
 });
 
 const getAdminOrderData = catchAsync(async (req, res) => {
-  // console.log(req.body);
-  const result = await paymentService.getAdminOrderDataFromDB(req.body.email);
+  const result = await paymentService.getAdminOrderDataFromDB();
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,

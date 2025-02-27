@@ -32,7 +32,7 @@ const paymentSuccessfullIntoDB = async (transactionId: string) => {
 };
 
 
-const getAdminOrderDataFromDB = async (email: string) => {
+const getAdminOrderDataFromDB = async () => {
   // Step 1: Find all orders that are paid and contain products
   const orders = await Order.find({ paidStatus: true }).populate("products");
 
@@ -46,7 +46,7 @@ const getAdminOrderDataFromDB = async (email: string) => {
     // Product collection থেকে matching product খোঁজা
     const matchingProducts = await Product.find({
       _id: { $in: productIds },
-      authorEmail: email, // Match author email
+      // authorEmail: email, // Match author email
     });
 
     if (matchingProducts.length > 0) {
